@@ -3,7 +3,7 @@
 
 本文档基于JDK-11
 
-笔记均放置于Learning jdk.md中
+笔记均放置于Learning JDK.md中
 
 ## 测试代码
 
