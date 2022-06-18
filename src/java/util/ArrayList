@@ -305,3 +305,47 @@ public class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
         return true;
     }
     
+    /**
+     * Inserts all of the elements in the specified collection into this
+     * list, starting at the specified position.  Shifts the element
+     * currently at that position (if any) and any subsequent elements to
+     * the right (increases their indices).  The new elements will appear
+     * in the list in the order that they are returned by the
+     * specified collection's iterator.
+     *
+     * @param index index at which to insert the first element from the
+     *              specified collection
+     * @param c     collection containing elements to be added to this list
+     *
+     * @return {@code true} if this list changed as a result of the call
+     *
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     * @throws NullPointerException      if the specified collection is null
+     */
+    // 将指定容器中的元素添加到当前顺序表的index处
+    public boolean addAll(int index, Collection<? extends E> c) {
+        rangeCheckForAdd(index);
+        
+        Object[] a = c.toArray();
+        modCount++;
+        int numNew = a.length;
+        if(numNew == 0) {
+            return false;
+        }
+        Object[] elementData;
+        final int s;
+        if(numNew>(elementData = this.elementData).length - (s = size)) {
+            elementData = grow(s + numNew);
+        }
+        
+        int numMoved = s - index;
+        if(numMoved>0) {
+            System.arraycopy(elementData, index, elementData, index + numNew, numMoved);
+        }
+        System.arraycopy(a, 0, elementData, index, numNew);
+        size = s + numNew;
+        return true;
+    }
+    
+    /*▲ 存值 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
