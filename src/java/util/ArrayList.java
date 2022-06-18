@@ -369,3 +369,204 @@ public class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
     
     /*▲ 取值 ████████████████████████████████████████████████████████████████████████████████┛ */
     
+     /*▼ 移除 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Removes the element at the specified position in this list.
+     * Shifts any subsequent elements to the left (subtracts one from their
+     * indices).
+     *
+     * @param index the index of the element to be removed
+     *
+     * @return the element that was removed from the list
+     *
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
+    // 移除索引index处的元素，返回被移除的元素
+    public E remove(int index) {
+        Objects.checkIndex(index, size);
+        final Object[] es = elementData;
+        
+        @SuppressWarnings("unchecked")
+        E oldValue = (E) es[index];
+        
+        // 移除es[index]
+        fastRemove(es, index);
+        
+        return oldValue;
+    }
+    
+    /**
+     * Removes the first occurrence of the specified element from this list,
+     * if it is present.  If the list does not contain the element, it is
+     * unchanged.  More formally, removes the element with the lowest index
+     * {@code i} such that
+     * {@code Objects.equals(o, get(i))}
+     * (if such an element exists).  Returns {@code true} if this list
+     * contained the specified element (or equivalently, if this list
+     * changed as a result of the call).
+     *
+     * @param o element to be removed from this list, if present
+     *
+     * @return {@code true} if this list contained the specified element
+     */
+    // 移除指定的元素，返回值指示是否移除成功
+    public boolean remove(Object o) {
+        final Object[] es = elementData;
+        final int size = this.size;
+        int i = 0;
+found:
+        {
+            if(o == null) {
+                for(; i<size; i++) {
+                    if(es[i] == null) {
+                        break found;
+                    }
+                }
+            } else {
+                for(; i<size; i++) {
+                    if(o.equals(es[i])) {
+                        break found;
+                    }
+                }
+            }
+            return false;
+        }
+        
+        // 移除es[index]
+        fastRemove(es, i);
+        
+        return true;
+    }
+    
+    
+    /**
+     * @throws NullPointerException {@inheritDoc}
+     */
+    // 移除满足条件的元素，移除条件由filter决定，返回值指示是否移除成功
+    @Override
+    public boolean removeIf(Predicate<? super E> filter) {
+        return removeIf(filter, 0, size);
+    }
+    
+    
+    /**
+     * Removes from this list all of its elements that are contained in the
+     * specified collection.
+     *
+     * @param c collection containing elements to be removed from this list
+     *
+     * @return {@code true} if this list changed as a result of the call
+     *
+     * @throws ClassCastException   if the class of an element of this list
+     *                              is incompatible with the specified collection
+     *                              (<a href="Collection.html#optional-restrictions">optional</a>)
+     * @throws NullPointerException if this list contains a null element and the
+     *                              specified collection does not permit null elements
+     *                              (<a href="Collection.html#optional-restrictions">optional</a>),
+     *                              or if the specified collection is null
+     * @see Collection#contains(Object)
+     */
+    // (匹配则移除)移除当前顺序表中所有与给定容器中的元素匹配的元素
+    public boolean removeAll(Collection<?> c) {
+        return batchRemove(c, false, 0, size);
+    }
+    
+    /**
+     * Retains only the elements in this list that are contained in the
+     * specified collection.  In other words, removes from this list all
+     * of its elements that are not contained in the specified collection.
+     *
+     * @param c collection containing elements to be retained in this list
+     *
+     * @return {@code true} if this list changed as a result of the call
+     *
+     * @throws ClassCastException   if the class of an element of this list
+     *                              is incompatible with the specified collection
+     *                              (<a href="Collection.html#optional-restrictions">optional</a>)
+     * @throws NullPointerException if this list contains a null element and the
+     *                              specified collection does not permit null elements
+     *                              (<a href="Collection.html#optional-restrictions">optional</a>),
+     *                              or if the specified collection is null
+     * @see Collection#contains(Object)
+     */
+    // (不匹配则移除)移除当前顺序表中所有与给定容器中的元素不匹配的元素
+    public boolean retainAll(Collection<?> c) {
+        return batchRemove(c, true, 0, size);
+    }
+    
+    
+    /**
+     * Removes from this list all of the elements whose index is between
+     * {@code fromIndex}, inclusive, and {@code toIndex}, exclusive.
+     * Shifts any succeeding elements to the left (reduces their index).
+     * This call shortens the list by {@code (toIndex - fromIndex)} elements.
+     * (If {@code toIndex==fromIndex}, this operation has no effect.)
+     *
+     * @throws IndexOutOfBoundsException if {@code fromIndex} or
+     *                                   {@code toIndex} is out of range
+     *                                   ({@code fromIndex < 0 ||
+     *                                   toIndex > size() ||
+     *                                   toIndex < fromIndex})
+     */
+    // 移除当前顺序表[fromIndex,toIndex]之间的元素
+    protected void removeRange(int fromIndex, int toIndex) {
+        if(fromIndex>toIndex) {
+            throw new IndexOutOfBoundsException(outOfBoundsMsg(fromIndex, toIndex));
+        }
+        
+        modCount++;
+        
+        // 移除lo~hi之间的元素
+        shiftTailOverGap(elementData, fromIndex, toIndex);
+    }
+    
+    
+    /**
+     * Removes all of the elements from this list.  The list will
+     * be empty after this call returns.
+     */
+    // 清空当前顺序表中的元素
+    public void clear() {
+        modCount++;
+        final Object[] es = elementData;
+        for(int to = size, i = size = 0; i<to; i++) {
+            es[i] = null;
+        }
+    }
+    
+    /*▲ 移除 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
+    
+    
+    /*▼ 替换 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Replaces the element at the specified position in this list with
+     * the specified element.
+     *
+     * @param index   index of the element to replace
+     * @param element element to be stored at the specified position
+     *
+     * @return the element previously at the specified position
+     *
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
+    // 将index处的元素更新为element，并返回旧元素
+    public E set(int index, E element) {
+        Objects.checkIndex(index, size);
+        E oldValue = elementData(index);
+        elementData[index] = element;
+        return oldValue;
+    }
+    
+    
+    // 更新当前顺序表中所有元素，更新策略由operator决定
+    @Override
+    public void replaceAll(UnaryOperator<E> operator) {
+        replaceAllRange(operator, 0, size);
+        modCount++;
+    }
+    
+    /*▲ 替换 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
