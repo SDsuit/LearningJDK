@@ -349,3 +349,23 @@ public class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
     
     /*▲ 存值 ████████████████████████████████████████████████████████████████████████████████┛ */
     
+    /*▼ 取值 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns the element at the specified position in this list.
+     *
+     * @param index index of the element to return
+     *
+     * @return the element at the specified position in this list
+     *
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
+    // 获取指定索引处的元素
+    public E get(int index) {
+        //检查传入的index是否合法（要求满足0<=index<length）
+        Objects.checkIndex(index, size);
+        return elementData(index);
+    }
+    
+    /*▲ 取值 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
