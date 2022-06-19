@@ -570,3 +570,57 @@ found:
     
     /*▲ 替换 ████████████████████████████████████████████████████████████████████████████████┛ */
     
+    
+    
+    /*▼ 包含查询 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns {@code true} if this list contains the specified element.
+     * More formally, returns {@code true} if and only if this list contains
+     * at least one element {@code e} such that
+     * {@code Objects.equals(o, e)}.
+     *
+     * @param o element whose presence in this list is to be tested
+     *
+     * @return {@code true} if this list contains the specified element
+     */
+    // 判断当前顺序表中是否包含指定的元素
+    public boolean contains(Object o) {
+        return indexOf(o) >= 0;
+    }
+    
+    /*▲ 包含查询 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
+    
+    
+    /*▼ 定位 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns the index of the first occurrence of the specified element
+     * in this list, or -1 if this list does not contain the element.
+     * More formally, returns the lowest index {@code i} such that
+     * {@code Objects.equals(o, get(i))},
+     * or -1 if there is no such index.
+     */
+    // 返回指定元素的正序索引(正序查找首个匹配的元素)
+    public int indexOf(Object o) {
+        // 在[0, size)之间正序搜索元素o，返回首个匹配的索引
+        return indexOfRange(o, 0, size);
+    }
+    
+    /**
+     * Returns the index of the last occurrence of the specified element
+     * in this list, or -1 if this list does not contain the element.
+     * More formally, returns the highest index {@code i} such that
+     * {@code Objects.equals(o, get(i))},
+     * or -1 if there is no such index.
+     */
+    // 返回指定元素的逆序索引(逆序查找首个匹配的元素)
+    public int lastIndexOf(Object o) {
+        // 在[0, size)之间逆序搜索元素o，返回首个匹配的索引
+        return lastIndexOfRange(o, 0, size);
+    }
+    
+    /*▲ 定位 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
+    
