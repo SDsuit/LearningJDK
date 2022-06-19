@@ -623,4 +623,263 @@ found:
     
     /*▲ 定位 ████████████████████████████████████████████████████████████████████████████████┛ */
     
+       
+    
+    /*▼ 视图 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns a view of the portion of this list between the specified
+     * {@code fromIndex}, inclusive, and {@code toIndex}, exclusive.  (If
+     * {@code fromIndex} and {@code toIndex} are equal, the returned list is
+     * empty.)  The returned list is backed by this list, so non-structural
+     * changes in the returned list are reflected in this list, and vice-versa.
+     * The returned list supports all of the optional list operations.
+     *
+     * <p>This method eliminates the need for explicit range operations (of
+     * the sort that commonly exist for arrays).  Any operation that expects
+     * a list can be used as a range operation by passing a subList view
+     * instead of a whole list.  For example, the following idiom
+     * removes a range of elements from a list:
+     * <pre>
+     *      list.subList(from, to).clear();
+     * </pre>
+     * Similar idioms may be constructed for {@link #indexOf(Object)} and
+     * {@link #lastIndexOf(Object)}, and all of the algorithms in the
+     * {@link Collections} class can be applied to a subList.
+     *
+     * <p>The semantics of the list returned by this method become undefined if
+     * the backing list (i.e., this list) is <i>structurally modified</i> in
+     * any way other than via the returned list.  (Structural modifications are
+     * those that change the size of this list, or otherwise perturb it in such
+     * a fashion that iterations in progress may yield incorrect results.)
+     *
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     * @throws IllegalArgumentException  {@inheritDoc}
+     */
+    // 返回[fromIndex, toIndex)之间的元素的视图
+    public List<E> subList(int fromIndex, int toIndex) {
+        subListRangeCheck(fromIndex, toIndex, size);
+        return new SubList<>(this, fromIndex, toIndex);
+    }
+    
+    
+    /**
+     * Returns an array containing all of the elements in this list
+     * in proper sequence (from first to last element).
+     *
+     * <p>The returned array will be "safe" in that no references to it are
+     * maintained by this list.  (In other words, this method must allocate
+     * a new array).  The caller is thus free to modify the returned array.
+     *
+     * <p>This method acts as bridge between array-based and collection-based
+     * APIs.
+     *
+     * @return an array containing all of the elements in this list in
+     * proper sequence
+     */
+    // 以数组形式返回当前顺序表
+    public Object[] toArray() {
+        return Arrays.copyOf(elementData, size);
+    }
+    
+    /**
+     * Returns an array containing all of the elements in this list in proper
+     * sequence (from first to last element); the runtime type of the returned
+     * array is that of the specified array.  If the list fits in the
+     * specified array, it is returned therein.  Otherwise, a new array is
+     * allocated with the runtime type of the specified array and the size of
+     * this list.
+     *
+     * <p>If the list fits in the specified array with room to spare
+     * (i.e., the array has more elements than the list), the element in
+     * the array immediately following the end of the collection is set to
+     * {@code null}.  (This is useful in determining the length of the
+     * list <i>only</i> if the caller knows that the list does not contain
+     * any null elements.)
+     *
+     * @param a the array into which the elements of the list are to
+     *          be stored, if it is big enough; otherwise, a new array of the
+     *          same runtime type is allocated for this purpose.
+     *
+     * @return an array containing the elements of the list
+     *
+     * @throws ArrayStoreException  if the runtime type of the specified array
+     *                              is not a supertype of the runtime type of every element in
+     *                              this list
+     * @throws NullPointerException if the specified array is null
+     */
+    // 将当前顺序表中的元素存入数组a后返回，需要将链表中的元素转换为T类型
+    @SuppressWarnings("unchecked")
+    public <T> T[] toArray(T[] a) {
+        if(a.length<size){
+            // Make a new array of a's runtime type, but my contents:
+            return (T[]) Arrays.copyOf(elementData, size, a.getClass());
+        }
+        
+        System.arraycopy(elementData, 0, a, 0, size);
+        
+        if(a.length>size) {
+            a[size] = null;
+        }
+        return a;
+    }
+    
+    /*▲ 视图 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
+    
+    
+    /*▼ 迭代 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * @throws NullPointerException {@inheritDoc}
+     */
+    // 遍历当前顺序表中的元素，并对其应用指定的择取操作
+    @Override
+    public void forEach(Consumer<? super E> action) {
+        Objects.requireNonNull(action);
+        final int expectedModCount = modCount;
+        final Object[] es = elementData;
+        final int size = this.size;
+        for(int i = 0; modCount == expectedModCount && i<size; i++) {
+            action.accept(elementAt(es, i));
+        }
+        if(modCount != expectedModCount) {
+            throw new ConcurrentModificationException();
+        }
+    }
+    
+    
+    /**
+     * Returns an iterator over the elements in this list in proper sequence.
+     *
+     * <p>The returned iterator is <a href="#fail-fast"><i>fail-fast</i></a>.
+     *
+     * @return an iterator over the elements in this list in proper sequence
+     */
+    // 返回当前顺序表的一个迭代器
+    public Iterator<E> iterator() {
+        return new Itr();
+    }
+    
+    /**
+     * Returns a list iterator over the elements in this list (in proper
+     * sequence).
+     *
+     * <p>The returned list iterator is <a href="#fail-fast"><i>fail-fast</i></a>.
+     *
+     * @see #listIterator(int)
+     */
+    // 返回当前顺序表的一个增强的迭代器，且设定下一个待遍历元素为索引0处的元素
+    public ListIterator<E> listIterator() {
+        return new ListItr(0);
+    }
+    
+    /**
+     * Returns a list iterator over the elements in this list (in proper
+     * sequence), starting at the specified position in the list.
+     * The specified index indicates the first element that would be
+     * returned by an initial call to {@link ListIterator#next next}.
+     * An initial call to {@link ListIterator#previous previous} would
+     * return the element with the specified index minus one.
+     *
+     * <p>The returned list iterator is <a href="#fail-fast"><i>fail-fast</i></a>.
+     *
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
+    // 返回当前顺序表的一个增强的迭代器，且设定下一个待遍历元素为索引index处的元素
+    public ListIterator<E> listIterator(int index) {
+        rangeCheckForAdd(index);
+        return new ListItr(index);
+    }
+    
+    
+    /**
+     * Creates a <em><a href="Spliterator.html#binding">late-binding</a></em>
+     * and <em>fail-fast</em> {@link Spliterator} over the elements in this
+     * list.
+     *
+     * <p>The {@code Spliterator} reports {@link Spliterator#SIZED},
+     * {@link Spliterator#SUBSIZED}, and {@link Spliterator#ORDERED}.
+     * Overriding implementations should document the reporting of additional
+     * characteristic values.
+     *
+     * @return a {@code Spliterator} over the elements in this list
+     *
+     * @since 1.8
+     */
+    // 返回一个分割迭代器
+    @Override
+    public Spliterator<E> spliterator() {
+        return new ArrayListSpliterator(0, -1, 0);
+    }
+    
+    /*▲ 迭代 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
+    
+    /*▼ 杂项 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns the number of elements in this list.
+     *
+     * @return the number of elements in this list
+     */
+    // 返回当前顺序表的元素数量
+    public int size() {
+        return size;
+    }
+    
+    /**
+     * Returns {@code true} if this list contains no elements.
+     *
+     * @return {@code true} if this list contains no elements
+     */
+    // 判断当前顺序表是否为空
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    
+    
+    // 使用指定的比较器对当前顺序表内的元素进行排序
+    @Override
+    @SuppressWarnings("unchecked")
+    public void sort(Comparator<? super E> c) {
+        final int expectedModCount = modCount;
+        Arrays.sort((E[]) elementData, 0, size, c);
+        if(modCount != expectedModCount) {
+            throw new ConcurrentModificationException();
+        }
+        modCount++;
+    }
+    
+    
+    /**
+     * Trims the capacity of this {@code ArrayList} instance to be the
+     * list's current size.  An application can use this operation to minimize
+     * the storage of an {@code ArrayList} instance.
+     */
+    // 重新设置顺序表的容量，将顺序表的容量最小化至目前拥有元素的数量
+    public void trimToSize() {
+        modCount++;
+        if(size<elementData.length) {
+            elementData = (size == 0) ? EMPTY_ELEMENTDATA : Arrays.copyOf(elementData, size);
+        }
+    }
+    
+    /**
+     * Increases the capacity of this {@code ArrayList} instance, if
+     * necessary, to ensure that it can hold at least the number of elements
+     * specified by the minimum capacity argument.
+     *
+     * @param minCapacity the desired minimum capacity
+     */
+    // 确保当前顺序表至少拥有minCapacity的容量
+    public void ensureCapacity(int minCapacity) {
+        if(minCapacity>elementData.length && !(elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA && minCapacity<=DEFAULT_CAPACITY)) {
+            modCount++;
+            grow(minCapacity);
+        }
+    }
+    
+    /*▲ 杂项 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
     
