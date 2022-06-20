@@ -883,3 +883,80 @@ found:
     /*▲ 杂项 ████████████████████████████████████████████████████████████████████████████████┛ */
     
     
+    
+        
+    /*▼ 序列化 ████████████████████████████████████████████████████████████████████████████████┓ */
+
+    //序列号
+    private static final long serialVersionUID = 8683452581122892189L;
+    
+    
+    /**
+     * Saves the state of the {@code ArrayList} instance to a stream
+     * (that is, serializes it).
+     *
+     * @param s the stream
+     *
+     * @throws IOException if an I/O error occurs
+     * @serialData The length of the array backing the {@code ArrayList}
+     * instance is emitted (int), followed by all of its elements
+     * (each an {@code Object}) in the proper order.
+     */
+    //序列化操作，输出流
+    private void writeObject(ObjectOutputStream s) throws IOException {
+        // Write out element count, and any hidden stuff
+        int expectedModCount = modCount;
+        s.defaultWriteObject();
+        
+        // Write out size as capacity for behavioral compatibility with clone()
+        s.writeInt(size);
+        
+        // Write out all elements in the proper order.
+        for(int i = 0; i<size; i++) {
+            s.writeObject(elementData[i]);
+        }
+        
+        if(modCount != expectedModCount) {
+            throw new ConcurrentModificationException();
+        }
+    }
+    
+    /**
+     * Reconstitutes the {@code ArrayList} instance from a stream (that is,
+     * deserializes it).
+     *
+     * @param s the stream
+     *
+     * @throws ClassNotFoundException if the class of a serialized object
+     *                                could not be found
+     * @throws IOException            if an I/O error occurs
+     */
+    //输入流
+    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+        
+        // Read in size, and any hidden stuff
+        s.defaultReadObject();
+        
+        // Read in capacity
+        s.readInt(); // ignored
+        
+        if(size>0) {
+            // like clone(), allocate array based upon size not capacity
+            SharedSecrets.getJavaObjectInputStreamAccess().checkArray(s, Object[].class, size);
+            Object[] elements = new Object[size];
+            
+            // Read in all elements in the proper order.
+            for(int i = 0; i<size; i++) {
+                elements[i] = s.readObject();
+            }
+            
+            elementData = elements;
+        } else if(size == 0) {
+            elementData = EMPTY_ELEMENTDATA;
+        } else {
+            throw new InvalidObjectException("Invalid size: " + size);
+        }
+    }
+    
+    /*▲ 序列化 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
