@@ -140,6 +140,7 @@ public class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
      * has size {@code 10} and its standard capacity increment is
      * zero.
      */
+    //默认容量大小为10，增量大小为0
     public Vector() {
         this(10);
     }
