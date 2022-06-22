@@ -189,6 +189,7 @@ public class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
      * @throws NullPointerException if the specified collection is null
      * @since 1.2
      */
+    //用一个集合创建Vector
     public Vector(Collection<? extends E> c) {
         elementData = c.toArray();
         elementCount = elementData.length;
