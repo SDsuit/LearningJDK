@@ -393,3 +393,83 @@ public class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
     /*▲ 存值 ████████████████████████████████████████████████████████████████████████████████┛ */
     
     
+    /*▼ 取值 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns the element at the specified position in this Vector.
+     *
+     * @param index index of the element to return
+     *
+     * @return object at the specified index
+     *
+     * @throws ArrayIndexOutOfBoundsException if the index is out of range
+     *                                        ({@code index < 0 || index >= size()})
+     * @since 1.2
+     */
+    // 获取指定索引处的元素
+    public synchronized E get(int index) {
+        if(index >= elementCount) {
+            throw new ArrayIndexOutOfBoundsException(index);
+        }
+        
+        return elementData(index);
+    }
+    
+    /**
+     * Returns the component at the specified index.
+     *
+     * <p>This method is identical in functionality to the {@link #get(int)}
+     * method (which is part of the {@link List} interface).
+     *
+     * @param index an index into this vector
+     *
+     * @return the component at the specified index
+     *
+     * @throws ArrayIndexOutOfBoundsException if the index is out of range
+     *                                        ({@code index < 0 || index >= size()})
+     */
+    // 获取指定索引处的元素
+    public synchronized E elementAt(int index) {
+        if(index >= elementCount) {
+            throw new ArrayIndexOutOfBoundsException(index + " >= " + elementCount);
+        }
+        
+        return elementData(index);
+    }
+    
+    /**
+     * Returns the first component (the item at index {@code 0}) of
+     * this vector.
+     *
+     * @return the first component of this vector
+     *
+     * @throws NoSuchElementException if this vector has no components
+     */
+    // 获取向量表中首个元素
+    public synchronized E firstElement() {
+        if(elementCount == 0) {
+            throw new NoSuchElementException();
+        }
+        
+        return elementData(0);
+    }
+    
+    /**
+     * Returns the last component of the vector.
+     *
+     * @return the last component of the vector, i.e., the component at index
+     * {@code size() - 1}
+     *
+     * @throws NoSuchElementException if this vector is empty
+     */
+    // 获取向量表中末尾元素
+    public synchronized E lastElement() {
+        if(elementCount == 0) {
+            throw new NoSuchElementException();
+        }
+        
+        return elementData(elementCount - 1);
+    }
+    
+    /*▲ 取值 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
