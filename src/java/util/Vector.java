@@ -307,3 +307,89 @@ public class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
         elementCount = s + 1;
     }
     
+    /**
+     * Appends all of the elements in the specified Collection to the end of
+     * this Vector, in the order that they are returned by the specified
+     * Collection's Iterator.  The behavior of this operation is undefined if
+     * the specified Collection is modified while the operation is in progress.
+     * (This implies that the behavior of this call is undefined if the
+     * specified Collection is this Vector, and this Vector is nonempty.)
+     *
+     * @param c elements to be inserted into this Vector
+     *
+     * @return {@code true} if this Vector changed as a result of the call
+     *
+     * @throws NullPointerException if the specified collection is null
+     * @since 1.2
+     */
+    // 将指定容器中的元素追加到当前向量表中
+    public boolean addAll(Collection<? extends E> c) {
+        Object[] a = c.toArray();
+        modCount++;
+        
+        int numNew = a.length;
+        if(numNew == 0) {
+            return false;
+        }
+        //使用同步代码块而不是同步方法，给核心代码加锁
+        synchronized(this) {
+            Object[] elementData = this.elementData;
+            final int s = elementCount;
+            if(numNew>elementData.length - s) {
+                elementData = grow(s + numNew);
+            }
+            System.arraycopy(a, 0, elementData, s, numNew);
+            elementCount = s + numNew;
+            return true;
+        }
+    }
+    
+    /**
+     * Inserts all of the elements in the specified Collection into this
+     * Vector at the specified position.  Shifts the element currently at
+     * that position (if any) and any subsequent elements to the right
+     * (increases their indices).  The new elements will appear in the Vector
+     * in the order that they are returned by the specified Collection's
+     * iterator.
+     *
+     * @param index index at which to insert the first element from the
+     *              specified collection
+     * @param c     elements to be inserted into this Vector
+     *
+     * @return {@code true} if this Vector changed as a result of the call
+     *
+     * @throws ArrayIndexOutOfBoundsException if the index is out of range
+     *                                        ({@code index < 0 || index > size()})
+     * @throws NullPointerException           if the specified collection is null
+     * @since 1.2
+     */
+    // 将指定容器中的元素添加到当前向量表的index处
+    public synchronized boolean addAll(int index, Collection<? extends E> c) {
+        if(index<0 || index>elementCount) {
+            throw new ArrayIndexOutOfBoundsException(index);
+        }
+        
+        Object[] a = c.toArray();
+        modCount++;
+        int numNew = a.length;
+        if(numNew == 0) {
+            return false;
+        }
+        Object[] elementData = this.elementData;
+        final int s = elementCount;
+        if(numNew>elementData.length - s) {
+            elementData = grow(s + numNew);
+        }
+        
+        int numMoved = s - index;
+        if(numMoved>0) {
+            System.arraycopy(elementData, index, elementData, index + numNew, numMoved);
+        }
+        System.arraycopy(a, 0, elementData, index, numNew);
+        elementCount = s + numNew;
+        return true;
+    }
+    
+    /*▲ 存值 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
+    
