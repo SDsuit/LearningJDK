@@ -126,3 +126,129 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     
     /*▲ 构造器 ████████████████████████████████████████████████████████████████████████████████┛ */
     
+    
+    
+    /*▼ 存值 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Appends the specified element to the end of this list.
+     *
+     * <p>This method is equivalent to {@link #addLast}.
+     *
+     * @param e element to be appended to this list
+     *
+     * @return {@code true} (as specified by {@link Collection#add})
+     */
+    // 将元素e追加到当前双向链表中
+    public boolean add(E e) {
+        linkLast(e);
+        return true;
+    }
+    
+    /**
+     * Inserts the specified element at the specified position in this list.
+     * Shifts the element currently at that position (if any) and any
+     * subsequent elements to the right (adds one to their indices).
+     *
+     * @param index   index at which the specified element is to be inserted
+     * @param element element to be inserted
+     *
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
+    // 将元素element添加到双向链表index处
+    public void add(int index, E element) {
+        checkPositionIndex(index);
+        
+        if(index == size) {
+            // 将指定的元素添加到链表结尾
+            linkLast(element);
+        } else {
+            // 获取index处的结点
+            Node<E> node = node(index);
+            
+            // 将元素element插入为node的前驱
+            linkBefore(element, node);
+        }
+    }
+    
+    
+    /**
+     * Appends all of the elements in the specified collection to the end of
+     * this list, in the order that they are returned by the specified
+     * collection's iterator.  The behavior of this operation is undefined if
+     * the specified collection is modified while the operation is in
+     * progress.  (Note that this will occur if the specified collection is
+     * this list, and it's nonempty.)
+     *
+     * @param c collection containing elements to be added to this list
+     *
+     * @return {@code true} if this list changed as a result of the call
+     *
+     * @throws NullPointerException if the specified collection is null
+     */
+    // 将指定容器中的元素追加到当前双向链表中
+    public boolean addAll(Collection<? extends E> c) {
+        return addAll(size, c);
+    }
+    
+    /**
+     * Inserts all of the elements in the specified collection into this
+     * list, starting at the specified position.  Shifts the element
+     * currently at that position (if any) and any subsequent elements to
+     * the right (increases their indices).  The new elements will appear
+     * in the list in the order that they are returned by the
+     * specified collection's iterator.
+     *
+     * @param index index at which to insert the first element
+     *              from the specified collection
+     * @param c     collection containing elements to be added to this list
+     *
+     * @return {@code true} if this list changed as a result of the call
+     *
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     * @throws NullPointerException      if the specified collection is null
+     */
+    // 将指定容器中的元素添加到当前双向链表的index处
+    public boolean addAll(int index, Collection<? extends E> c) {
+        checkPositionIndex(index);
+        
+        Object[] a = c.toArray();
+        int numNew = a.length;
+        if(numNew == 0) {
+            return false;
+        }
+        
+        Node<E> pred, succ;
+        if(index == size) {
+            succ = null;
+            pred = last;
+        } else {
+            succ = node(index);
+            pred = succ.prev;
+        }
+        
+        for(Object o : a) {
+            @SuppressWarnings("unchecked")
+            E e = (E) o;
+            Node<E> newNode = new Node<>(pred, e, null);
+            if(pred == null) {
+                first = newNode;
+            } else {
+                pred.next = newNode;
+            }
+            pred = newNode;
+        }
+        
+        if(succ == null) {
+            last = pred;
+        } else {
+            pred.next = succ;
+            succ.prev = pred;
+        }
+        
+        size += numNew;
+        modCount++;
+        return true;
+    }
+    
+    /*▲ 存值 ████████████████████████████████████████████████████████████████████████████████┛ */
