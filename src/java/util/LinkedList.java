@@ -272,3 +272,84 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     }
     
     /*▲ 取值 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+        
+    /*▼ 移除 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Removes the element at the specified position in this list.  Shifts any
+     * subsequent elements to the left (subtracts one from their indices).
+     * Returns the element that was removed from the list.
+     *
+     * @param index the index of the element to be removed
+     *
+     * @return the element previously at the specified position
+     *
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
+    // 移除索引index处的元素，返回被移除的元素
+    public E remove(int index) {
+        checkElementIndex(index);
+        // 获取index处的结点
+        Node<E> node = node(index);
+        // 将元素node从链表中移除
+        return unlink(node);
+    }
+    
+    /**
+     * Removes the first occurrence of the specified element from this list,
+     * if it is present.  If this list does not contain the element, it is
+     * unchanged.  More formally, removes the element with the lowest index
+     * {@code i} such that
+     * {@code Objects.equals(o, get(i))}
+     * (if such an element exists).  Returns {@code true} if this list
+     * contained the specified element (or equivalently, if this list
+     * changed as a result of the call).
+     *
+     * @param o element to be removed from this list, if present
+     *
+     * @return {@code true} if this list contained the specified element
+     */
+    // 移除指定的元素，返回值指示是否移除成功
+    public boolean remove(Object o) {
+        if(o == null) {
+            for(Node<E> x = first; x != null; x = x.next) {
+                if(x.item == null) {
+                    unlink(x);
+                    return true;
+                }
+            }
+        } else {
+            for(Node<E> x = first; x != null; x = x.next) {
+                if(o.equals(x.item)) {
+                    unlink(x);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Removes all of the elements from this list.
+     * The list will be empty after this call returns.
+     */
+    // 清空当前双向链表中的元素
+    public void clear() {
+        // Clearing all of the links between nodes is "unnecessary", but:
+        // - helps a generational GC if the discarded nodes inhabit
+        //   more than one generation
+        // - is sure to free memory even if there is a reachable Iterator
+        for(Node<E> x = first; x != null; ) {
+            Node<E> next = x.next;
+            x.item = null;
+            x.next = null;
+            x.prev = null;
+            x = next;
+        }
+        first = last = null;
+        size = 0;
+        modCount++;
+    }
+    
+    /*▲ 移除 ████████████████████████████████████████████████████████████████████████████████┛ */
