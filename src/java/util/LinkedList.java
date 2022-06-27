@@ -252,3 +252,23 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     }
     
     /*▲ 存值 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    
+    /*▼ 取值 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns the element at the specified position in this list.
+     *
+     * @param index index of the element to return
+     *
+     * @return the element at the specified position in this list
+     *
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
+    // 获取指定索引处的元素
+    public E get(int index) {
+        checkElementIndex(index);
+        return node(index).item;
+    }
+    
+    /*▲ 取值 ████████████████████████████████████████████████████████████████████████████████┛ */
