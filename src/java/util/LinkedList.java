@@ -353,3 +353,28 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     }
     
     /*▲ 移除 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    
+    /*▼ 替换 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Replaces the element at the specified position in this list with the
+     * specified element.
+     *
+     * @param index   index of the element to replace
+     * @param element element to be stored at the specified position
+     *
+     * @return the element previously at the specified position
+     *
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
+    // 将index处的元素更新为element，并返回旧元素
+    public E set(int index, E element) {
+        checkElementIndex(index);
+        Node<E> x = node(index);
+        E oldVal = x.item;
+        x.item = element;
+        return oldVal;
+    }
+    
+    /*▲ 替换 ████████████████████████████████████████████████████████████████████████████████┛ */
