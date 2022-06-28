@@ -378,3 +378,23 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     }
     
     /*▲ 替换 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    
+    /*▼ 包含查询 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns {@code true} if this list contains the specified element.
+     * More formally, returns {@code true} if and only if this list contains
+     * at least one element {@code e} such that
+     * {@code Objects.equals(o, e)}.
+     *
+     * @param o element whose presence in this list is to be tested
+     *
+     * @return {@code true} if this list contains the specified element
+     */
+    // 判断当前双向链表中是否包含指定的元素
+    public boolean contains(Object o) {
+        return indexOf(o) >= 0;
+    }
+    
+    /*▲ 包含查询 ████████████████████████████████████████████████████████████████████████████████┛ */
