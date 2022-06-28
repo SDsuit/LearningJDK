@@ -469,3 +469,92 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     }
     
     /*▲ 定位 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    
+    /*▼ 视图 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns an array containing all of the elements in this list
+     * in proper sequence (from first to last element).
+     *
+     * <p>The returned array will be "safe" in that no references to it are
+     * maintained by this list.  (In other words, this method must allocate
+     * a new array).  The caller is thus free to modify the returned array.
+     *
+     * <p>This method acts as bridge between array-based and collection-based
+     * APIs.
+     *
+     * @return an array containing all of the elements in this list
+     * in proper sequence
+     */
+    //按照LinkedList的顺序返回一个数组
+    public Object[] toArray() {
+        Object[] result = new Object[size];
+        int i = 0;
+        for(Node<E> x = first; x != null; x = x.next) {
+            result[i++] = x.item;
+        }
+        return result;
+    }
+    
+    /**
+     * Returns an array containing all of the elements in this list in
+     * proper sequence (from first to last element); the runtime type of
+     * the returned array is that of the specified array.  If the list fits
+     * in the specified array, it is returned therein.  Otherwise, a new
+     * array is allocated with the runtime type of the specified array and
+     * the size of this list.
+     *
+     * <p>If the list fits in the specified array with room to spare (i.e.,
+     * the array has more elements than the list), the element in the array
+     * immediately following the end of the list is set to {@code null}.
+     * (This is useful in determining the length of the list <i>only</i> if
+     * the caller knows that the list does not contain any null elements.)
+     *
+     * <p>Like the {@link #toArray()} method, this method acts as bridge between
+     * array-based and collection-based APIs.  Further, this method allows
+     * precise control over the runtime type of the output array, and may,
+     * under certain circumstances, be used to save allocation costs.
+     *
+     * <p>Suppose {@code x} is a list known to contain only strings.
+     * The following code can be used to dump the list into a newly
+     * allocated array of {@code String}:
+     *
+     * <pre>
+     *     String[] y = x.toArray(new String[0]);</pre>
+     *
+     * Note that {@code toArray(new Object[0])} is identical in function to
+     * {@code toArray()}.
+     *
+     * @param a the array into which the elements of the list are to
+     *          be stored, if it is big enough; otherwise, a new array of the
+     *          same runtime type is allocated for this purpose.
+     *
+     * @return an array containing the elements of the list
+     *
+     * @throws ArrayStoreException  if the runtime type of the specified array
+     *                              is not a supertype of the runtime type of every element in
+     *                              this list
+     * @throws NullPointerException if the specified array is null
+     */
+    @SuppressWarnings("unchecked")
+    //按数组形式返回LinkedList
+    public <T> T[] toArray(T[] a) {
+        if(a.length<size) {
+            a = (T[]) Array.newInstance(a.getClass().getComponentType(), size);
+        }
+        
+        int i = 0;
+        Object[] result = a;
+        for(Node<E> x = first; x != null; x = x.next) {
+            result[i++] = x.item;
+        }
+        
+        if(a.length>size) {
+            a[size] = null;
+        }
+        
+        return a;
+    }
+    
+    /*▲ 视图 ████████████████████████████████████████████████████████████████████████████████┛ */
