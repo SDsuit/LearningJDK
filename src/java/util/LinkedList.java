@@ -398,3 +398,74 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     }
     
     /*▲ 包含查询 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    
+    /*▼ 定位 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns the index of the first occurrence of the specified element
+     * in this list, or -1 if this list does not contain the element.
+     * More formally, returns the lowest index {@code i} such that
+     * {@code Objects.equals(o, get(i))},
+     * or -1 if there is no such index.
+     *
+     * @param o element to search for
+     *
+     * @return the index of the first occurrence of the specified element in
+     * this list, or -1 if this list does not contain the element
+     */
+    // 返回指定元素的正序索引(正序查找首个匹配的元素)
+    public int indexOf(Object o) {
+        int index = 0;
+        if(o == null) {
+            for(Node<E> x = first; x != null; x = x.next) {
+                if(x.item == null) {
+                    return index;
+                }
+                index++;
+            }
+        } else {
+            for(Node<E> x = first; x != null; x = x.next) {
+                if(o.equals(x.item)) {
+                    return index;
+                }
+                index++;
+            }
+        }
+        return -1;
+    }
+    
+    /**
+     * Returns the index of the last occurrence of the specified element
+     * in this list, or -1 if this list does not contain the element.
+     * More formally, returns the highest index {@code i} such that
+     * {@code Objects.equals(o, get(i))},
+     * or -1 if there is no such index.
+     *
+     * @param o element to search for
+     *
+     * @return the index of the last occurrence of the specified element in
+     * this list, or -1 if this list does not contain the element
+     */
+    // 返回指定元素的逆序索引(逆序查找首个匹配的元素)
+    public int lastIndexOf(Object o) {
+        int index = size;
+        if(o == null) {
+            for(Node<E> x = last; x != null; x = x.prev) {
+                index--;
+                if(x.item == null) {
+                    return index;
+                }
+            }
+        } else {
+            for(Node<E> x = last; x != null; x = x.prev) {
+                index--;
+                if(o.equals(x.item)) {
+                    return index;
+                }
+            }
+        }
+        return -1;
+    }
+    
+    /*▲ 定位 ████████████████████████████████████████████████████████████████████████████████┛ */
