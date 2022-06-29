@@ -635,3 +635,219 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     }
     
     /*▲ 杂项 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    
+    /*▼ 队列操作 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /* 入队 ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼  */
+    
+    /**
+     * Inserts the specified element at the front of this list.
+     *
+     * @param e the element to insert
+     *
+     * @return {@code true} (as specified by {@link Deque#offerFirst})
+     *
+     * @since 1.6
+     */
+    // 从双向链表头部加入，链表满时返回false
+    public boolean offerFirst(E e) {
+        addFirst(e);
+        return true;
+    }
+    
+    /**
+     * Inserts the specified element at the end of this list.
+     *
+     * @param e the element to insert
+     *
+     * @return {@code true} (as specified by {@link Deque#offerLast})
+     *
+     * @since 1.6
+     */
+    // 从双向链表尾部加入，链表满时返回false
+    public boolean offerLast(E e) {
+        addLast(e);
+        return true;
+    }
+    
+    /**
+     * Adds the specified element as the tail (last element) of this list.
+     *
+     * @param e the element to add
+     *
+     * @return {@code true} (as specified by {@link Queue#offer})
+     *
+     * @since 1.5
+     */
+    // 从双向链表尾部加入，链表满时返回false
+    public boolean offer(E e) {
+        return add(e);
+    }
+    
+    
+    /**
+     * Inserts the specified element at the beginning of this list.
+     *
+     * @param e the element to add
+     */
+    // 从双向链表头部加入，链表满时抛异常
+    public void addFirst(E e) {
+        linkFirst(e);
+    }
+    
+    /**
+     * Appends the specified element to the end of this list.
+     *
+     * <p>This method is equivalent to {@link #add}.
+     *
+     * @param e the element to add
+     */
+    // 从双向链表尾部加入，链表满时抛异常
+    public void addLast(E e) {
+        linkLast(e);
+    }
+    
+    /* 入队 ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲  */
+    
+    
+    /* 出队 ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼  */
+    
+    /**
+     * Retrieves and removes the first element of this list,
+     * or returns {@code null} if this list is empty.
+     *
+     * @return the first element of this list, or {@code null} if
+     * this list is empty
+     *
+     * @since 1.6
+     */
+    // 从双向链表头部移除，链表空时返回null
+    public E pollFirst() {
+        final Node<E> f = first;
+        return (f == null) ? null : unlinkFirst(f);
+    }
+    
+    /**
+     * Retrieves and removes the last element of this list,
+     * or returns {@code null} if this list is empty.
+     *
+     * @return the last element of this list, or {@code null} if
+     * this list is empty
+     *
+     * @since 1.6
+     */
+    // 从双向链表尾部移除，链表空时返回null
+    public E pollLast() {
+        final Node<E> l = last;
+        return (l == null) ? null : unlinkLast(l);
+    }
+    
+    /**
+     * Retrieves and removes the head (first element) of this list.
+     *
+     * @return the head of this list, or {@code null} if this list is empty
+     *
+     * @since 1.5
+     */
+    // 从双向链表头部移除，链表空时返回null
+    public E poll() {
+        final Node<E> f = first;
+        return (f == null) ? null : unlinkFirst(f);
+    }
+    
+    
+    /**
+     * Removes and returns the first element from this list.
+     *
+     * @return the first element from this list
+     *
+     * @throws NoSuchElementException if this list is empty
+     */
+    // 从双向链表头部移除，链表空时抛异常
+    public E removeFirst() {
+        final Node<E> f = first;
+        if(f == null) {
+            throw new NoSuchElementException();
+        }
+        return unlinkFirst(f);
+    }
+    
+    /**
+     * Removes and returns the last element from this list.
+     *
+     * @return the last element from this list
+     *
+     * @throws NoSuchElementException if this list is empty
+     */
+    // 从双向链表尾部移除，链表空时抛异常
+    public E removeLast() {
+        final Node<E> l = last;
+        if(l == null) {
+            throw new NoSuchElementException();
+        }
+        return unlinkLast(l);
+    }
+    
+    /**
+     * Retrieves and removes the head (first element) of this list.
+     *
+     * @return the head of this list
+     *
+     * @throws NoSuchElementException if this list is empty
+     * @since 1.5
+     */
+    // 从双向链表头部移除，链表空时抛异常
+    public E remove() {
+        return removeFirst();
+    }
+    
+    
+    /**
+     * Removes the first occurrence of the specified element in this
+     * list (when traversing the list from head to tail).  If the list
+     * does not contain the element, it is unchanged.
+     *
+     * @param o element to be removed from this list, if present
+     *
+     * @return {@code true} if the list contained the specified element
+     *
+     * @since 1.6
+     */
+    // 从前往后遍历双向链表，移除首个包含指定元素的结点
+    public boolean removeFirstOccurrence(Object o) {
+        return remove(o);
+    }
+    
+    /**
+     * Removes the last occurrence of the specified element in this
+     * list (when traversing the list from head to tail).  If the list
+     * does not contain the element, it is unchanged.
+     *
+     * @param o element to be removed from this list, if present
+     *
+     * @return {@code true} if the list contained the specified element
+     *
+     * @since 1.6
+     */
+    // 从后往前遍历双向链表，移除首个包含指定元素的结点
+    public boolean removeLastOccurrence(Object o) {
+        if(o == null) {
+            for(Node<E> x = last; x != null; x = x.prev) {
+                if(x.item == null) {
+                    unlink(x);
+                    return true;
+                }
+            }
+        } else {
+            for(Node<E> x = last; x != null; x = x.prev) {
+                if(o.equals(x.item)) {
+                    unlink(x);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /* 出队 ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲  */
