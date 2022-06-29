@@ -558,3 +558,65 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     }
     
     /*▲ 视图 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    /*▼ 迭代 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * @since 1.6
+     */
+    // 返回当前链表的逆序迭代器
+    public Iterator<E> descendingIterator() {
+        return new DescendingIterator();
+    }
+    
+    /**
+     * Returns a list-iterator of the elements in this list (in proper
+     * sequence), starting at the specified position in the list.
+     * Obeys the general contract of {@code List.listIterator(int)}.<p>
+     *
+     * The list-iterator is <i>fail-fast</i>: if the list is structurally
+     * modified at any time after the Iterator is created, in any way except
+     * through the list-iterator's own {@code remove} or {@code add}
+     * methods, the list-iterator will throw a
+     * {@code ConcurrentModificationException}.  Thus, in the face of
+     * concurrent modification, the iterator fails quickly and cleanly, rather
+     * than risking arbitrary, non-deterministic behavior at an undetermined
+     * time in the future.
+     *
+     * @param index index of the first element to be returned from the
+     *              list-iterator (by a call to {@code next})
+     *
+     * @return a ListIterator of the elements in this list (in proper
+     * sequence), starting at the specified position in the list
+     *
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     * @see List#listIterator(int)
+     */
+    // 返回当前双向链表的一个增强的迭代器，且设定下一个待遍历元素为索引0处的元素
+    public ListIterator<E> listIterator(int index) {
+        checkPositionIndex(index);
+        return new ListItr(index);
+    }
+    
+    /**
+     * Creates a <em><a href="Spliterator.html#binding">late-binding</a></em>
+     * and <em>fail-fast</em> {@link Spliterator} over the elements in this
+     * list.
+     *
+     * <p>The {@code Spliterator} reports {@link Spliterator#SIZED} and
+     * {@link Spliterator#ORDERED}.  Overriding implementations should document
+     * the reporting of additional characteristic values.
+     *
+     * @return a {@code Spliterator} over the elements in this list
+     *
+     * @implNote The {@code Spliterator} additionally reports {@link Spliterator#SUBSIZED}
+     * and implements {@code trySplit} to permit limited parallelism..
+     * @since 1.8
+     */
+    // 返回一个可分割的迭代器
+    @Override
+    public Spliterator<E> spliterator() {
+        return new LLSpliterator<>(this, -1, 0);
+    }
+    
+    /*▲ 迭代 ████████████████████████████████████████████████████████████████████████████████┛ */
