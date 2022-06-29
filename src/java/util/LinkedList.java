@@ -620,3 +620,18 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     }
     
     /*▲ 迭代 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    
+    /*▼ 杂项 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns the number of elements in this list.
+     *
+     * @return the number of elements in this list
+     */
+    // 返回当前双向链表的元素数量
+    public int size() {
+        return size;
+    }
+    
+    /*▲ 杂项 ████████████████████████████████████████████████████████████████████████████████┛ */
