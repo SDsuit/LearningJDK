@@ -851,3 +851,40 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     }
     
     /* 出队 ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲  */
+
+
+    /* 栈式操作 ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼  */
+    
+    /**
+     * Pushes an element onto the stack represented by this list.  In other
+     * words, inserts the element at the front of this list.
+     *
+     * <p>This method is equivalent to {@link #addFirst}.
+     *
+     * @param e the element to push
+     *
+     * @since 1.6
+     */
+    // 从双向链表头部加入，链表满时抛异常（栈式操作）
+    public void push(E e) {
+        addFirst(e);
+    }
+    
+    /**
+     * Pops an element from the stack represented by this list.  In other
+     * words, removes and returns the first element of this list.
+     *
+     * <p>This method is equivalent to {@link #removeFirst()}.
+     *
+     * @return the element at the front of this list (which is the top
+     * of the stack represented by this list)
+     *
+     * @throws NoSuchElementException if this list is empty
+     * @since 1.6
+     */
+    // 从双向链表头部移除，链表空时抛异常（栈式操作）
+    public E pop() {
+        return removeFirst();
+    }
+    
+    /* 栈式操作 ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲  */
