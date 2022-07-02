@@ -1,8 +1,8 @@
 # ArrayList与Vector的区别
 
-**1、Vector是线程安全的，ArrayList不是线程安全的。
+**1、Vector是线程安全的，ArrayList不是线程安全的。**
 
-2、ArrayList在底层数组不够用时在原来的基础上扩展0.5倍，Vector是扩展1倍。**
+**2、ArrayList在底层数组不够用时在原来的基础上扩展0.5倍，Vector是扩展1倍。**
 
 ArrayList和Vector都实现了List接口，他们都是数组实现的。
 
