@@ -888,3 +888,98 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     }
     
     /* 栈式操作 ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲  */
+
+    /* 取值 ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼  */
+    
+    /**
+     * Retrieves, but does not remove, the head (first element) of this list.
+     *
+     * @return the head of this list
+     *
+     * @throws NoSuchElementException if this list is empty
+     * @since 1.5
+     */
+    // 获取双向链表头部元素，链表空时抛出异常
+    public E element() {
+        return getFirst();
+    }
+    
+    /**
+     * Returns the first element in this list.
+     *
+     * @return the first element in this list
+     *
+     * @throws NoSuchElementException if this list is empty
+     */
+    // 获取双向链表头部元素，链表空时抛出异常
+    public E getFirst() {
+        final Node<E> f = first;
+        if(f == null) {
+            throw new NoSuchElementException();
+        }
+        return f.item;
+    }
+    
+    /**
+     * Retrieves, but does not remove, the head (first element) of this list.
+     *
+     * @return the head of this list, or {@code null} if this list is empty
+     *
+     * @since 1.5
+     */
+    // 获取双向链表头部元素，链表空时返回null
+    public E peek() {
+        final Node<E> f = first;
+        return (f == null) ? null : f.item;
+    }
+    
+    /**
+     * Retrieves, but does not remove, the first element of this list,
+     * or returns {@code null} if this list is empty.
+     *
+     * @return the first element of this list, or {@code null}
+     * if this list is empty
+     *
+     * @since 1.6
+     */
+    // 获取双向链表头部元素，链表空时返回null
+    public E peekFirst() {
+        final Node<E> f = first;
+        return (f == null) ? null : f.item;
+    }
+    
+    
+    /**
+     * Returns the last element in this list.
+     *
+     * @return the last element in this list
+     *
+     * @throws NoSuchElementException if this list is empty
+     */
+    // 获取双向链表尾部元素，链表空时抛出异常
+    public E getLast() {
+        final Node<E> l = last;
+        if(l == null) {
+            throw new NoSuchElementException();
+        }
+        return l.item;
+    }
+    
+    /**
+     * Retrieves, but does not remove, the last element of this list,
+     * or returns {@code null} if this list is empty.
+     *
+     * @return the last element of this list, or {@code null}
+     * if this list is empty
+     *
+     * @since 1.6
+     */
+    // 获取双向链表尾部元素，链表空时返回null
+    public E peekLast() {
+        final Node<E> l = last;
+        return (l == null) ? null : l.item;
+    }
+    
+    /* 取值 ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲  */
+    
+    /*▲ 队列操作 ████████████████████████████████████████████████████████████████████████████████┛ */
