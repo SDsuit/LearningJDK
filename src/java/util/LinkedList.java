@@ -1029,3 +1029,469 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     }
     
     /*▲ 序列化 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    /**
+     * Returns a shallow copy of this {@code LinkedList}. (The elements
+     * themselves are not cloned.)
+     *
+     * @return a shallow copy of this {@code LinkedList} instance
+     */
+    public Object clone() {
+        LinkedList<E> clone = superClone();
+        
+        // Put clone into "virgin" state
+        clone.first = clone.last = null;
+        clone.size = 0;
+        clone.modCount = 0;
+        
+        // Initialize clone with our elements
+        for(Node<E> x = first; x != null; x = x.next) {
+            clone.add(x.item);
+        }
+        
+        return clone;
+    }
+    
+    
+    
+    void dataStructureInvariants() {
+        assert (size == 0) ? (first == null && last == null) : (first.prev == null && last.next == null);
+    }
+    
+    /**
+     * Links e as last element.
+     */
+    // 将指定的元素添加到链表结尾
+    void linkLast(E e) {
+        final Node<E> l = last;
+        final Node<E> newNode = new Node<>(l, e, null);
+        last = newNode;
+        if(l == null) {
+            first = newNode;
+        } else {
+            l.next = newNode;
+        }
+        size++;
+        modCount++;
+    }
+    
+    /**
+     * Inserts element e before non-null Node succ.
+     */
+    // 将元素e插入为succ的前驱
+    void linkBefore(E e, Node<E> succ) {
+        // assert succ != null;
+        final Node<E> pred = succ.prev;
+        final Node<E> newNode = new Node<>(pred, e, succ);
+        succ.prev = newNode;
+        if(pred == null) {
+            first = newNode;
+        } else {
+            pred.next = newNode;
+        }
+        size++;
+        modCount++;
+    }
+    
+    /**
+     * Unlinks non-null node x.
+     */
+    // 将元素x从链表中移除
+    E unlink(Node<E> x) {
+        // assert x != null;
+        final E element = x.item;
+        final Node<E> next = x.next;
+        final Node<E> prev = x.prev;
+
+        //判断删除元素是否位于链表头
+        if(prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            x.prev = null;
+        }
+        //判断删除元素是否位于链表尾
+        if(next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            x.next = null;
+        }
+        
+        x.item = null;
+        size--;
+        modCount++;
+        return element;
+    }
+    
+    /**
+     * Returns the (non-null) Node at the specified element index.
+     */
+    // 获取index处的结点
+    Node<E> node(int index) {
+        // assert isElementIndex(index);
+        //判断index的位置在整个链表的前半部分还是后半部分
+        if(index<(size >> 1)) {
+            Node<E> x = first;
+            for(int i = 0; i<index; i++) {
+                x = x.next;
+            }
+            return x;
+        } else {
+            Node<E> x = last;
+            for(int i = size - 1; i>index; i--) {
+                x = x.prev;
+            }
+            return x;
+        }
+    }
+    
+    /**
+     * Links e as first element.
+     */
+    //在链表的头部添加一个新的元素
+    private void linkFirst(E e) {
+        final Node<E> f = first;
+        final Node<E> newNode = new Node<>(null, e, f);
+        first = newNode;
+        if(f == null) {
+            last = newNode;
+        } else {
+            f.prev = newNode;
+        }
+        size++;
+        modCount++;
+    }
+    
+    /**
+     * Unlinks non-null first node f.
+     */
+    //移除链表的首个元素
+    private E unlinkFirst(Node<E> f) {
+        // assert f == first && f != null;
+        final E element = f.item;
+        final Node<E> next = f.next;
+        f.item = null;
+        f.next = null; // help GC
+        first = next;
+        if(next == null) {
+            last = null;
+        } else {
+            next.prev = null;
+        }
+        size--;
+        modCount++;
+        return element;
+    }
+    
+    /**
+     * Unlinks non-null last node l.
+     */
+    //移除链表的尾部元素
+    private E unlinkLast(Node<E> l) {
+        // assert l == last && l != null;
+        final E element = l.item;
+        final Node<E> prev = l.prev;
+        l.item = null;
+        l.prev = null; // help GC
+        last = prev;
+        if(prev == null) {
+            first = null;
+        } else {
+            prev.next = null;
+        }
+        size--;
+        modCount++;
+        return element;
+    }
+    
+    /**
+     * Tells if the argument is the index of an existing element.
+     */
+    private boolean isElementIndex(int index) {
+        return index >= 0 && index<size;
+    }
+    
+    /**
+     * Tells if the argument is the index of a valid position for an
+     * iterator or an add operation.
+     */
+    private boolean isPositionIndex(int index) {
+        return index >= 0 && index<=size;
+    }
+    
+    /**
+     * Constructs an IndexOutOfBoundsException detail message.
+     * Of the many possible refactorings of the error handling code,
+     * this "outlining" performs best with both server and client VMs.
+     */
+    private String outOfBoundsMsg(int index) {
+        return "Index: " + index + ", Size: " + size;
+    }
+    
+    private void checkElementIndex(int index) {
+        if(!isElementIndex(index))
+            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+    }
+    
+    private void checkPositionIndex(int index) {
+        if(!isPositionIndex(index))
+            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+    }
+    
+    @SuppressWarnings("unchecked")
+    private LinkedList<E> superClone() {
+        try {
+            return (LinkedList<E>) super.clone();
+        } catch(CloneNotSupportedException e) {
+            throw new InternalError(e);
+        }
+    }
+    
+    
+    
+    
+    
+    
+    // 链表结点
+    private static class Node<E> {
+        E item;
+        Node<E> next;
+        Node<E> prev;
+        
+        Node(Node<E> prev, E element, Node<E> next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+    
+    private class ListItr implements ListIterator<E> {
+        private Node<E> lastReturned;
+        private Node<E> next;
+        private int nextIndex;
+        private int expectedModCount = modCount;
+        
+        ListItr(int index) {
+            // assert isPositionIndex(index);
+            next = (index == size) ? null : node(index);
+            nextIndex = index;
+        }
+        
+        public boolean hasNext() {
+            return nextIndex<size;
+        }
+        
+        public E next() {
+            checkForComodification();
+            if(!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            
+            lastReturned = next;
+            next = next.next;
+            nextIndex++;
+            return lastReturned.item;
+        }
+        
+        public boolean hasPrevious() {
+            return nextIndex>0;
+        }
+        
+        public E previous() {
+            checkForComodification();
+            
+            if(!hasPrevious()) {
+                throw new NoSuchElementException();
+            }
+            
+            lastReturned = next = (next == null) ? last : next.prev;
+            nextIndex--;
+            return lastReturned.item;
+        }
+        
+        public int nextIndex() {
+            return nextIndex;
+        }
+        
+        public int previousIndex() {
+            return nextIndex - 1;
+        }
+        
+        public void remove() {
+            checkForComodification();
+            
+            if(lastReturned == null) {
+                throw new IllegalStateException();
+            }
+            
+            Node<E> lastNext = lastReturned.next;
+            unlink(lastReturned);
+            if(next == lastReturned) {
+                next = lastNext;
+            } else {
+                nextIndex--;
+            }
+            lastReturned = null;
+            expectedModCount++;
+        }
+        
+        public void set(E e) {
+            if(lastReturned == null) {
+                throw new IllegalStateException();
+            }
+            checkForComodification();
+            lastReturned.item = e;
+        }
+        
+        public void add(E e) {
+            checkForComodification();
+            lastReturned = null;
+            if(next == null) {
+                linkLast(e);
+            } else {
+                linkBefore(e, next);
+            }
+            nextIndex++;
+            expectedModCount++;
+        }
+        
+        public void forEachRemaining(Consumer<? super E> action) {
+            Objects.requireNonNull(action);
+            while(modCount == expectedModCount && nextIndex<size) {
+                action.accept(next.item);
+                lastReturned = next;
+                next = next.next;
+                nextIndex++;
+            }
+            checkForComodification();
+        }
+        
+        final void checkForComodification() {
+            if(modCount != expectedModCount) {
+                throw new ConcurrentModificationException();
+            }
+        }
+    }
+    
+    /**
+     * Adapter to provide descending iterators via ListItr.previous
+     */
+    private class DescendingIterator implements Iterator<E> {
+        private final ListItr itr = new ListItr(size());
+        
+        public boolean hasNext() {
+            return itr.hasPrevious();
+        }
+        
+        public E next() {
+            return itr.previous();
+        }
+        
+        public void remove() {
+            itr.remove();
+        }
+    }
+    
+    /** A customized variant of Spliterators.IteratorSpliterator */
+    static final class LLSpliterator<E> implements Spliterator<E> {
+        static final int BATCH_UNIT = 1 << 10;  // batch array size increment
+        static final int MAX_BATCH = 1 << 25;  // max batch array size;
+        final LinkedList<E> list; // null OK unless traversed
+        Node<E> current;      // current node; null until initialized
+        int est;              // size estimate; -1 until first needed
+        int expectedModCount; // initialized when est set
+        int batch;            // batch size for splits
+        
+        LLSpliterator(LinkedList<E> list, int est, int expectedModCount) {
+            this.list = list;
+            this.est = est;
+            this.expectedModCount = expectedModCount;
+        }
+        
+        public long estimateSize() {
+            return getEst();
+        }
+        
+        public Spliterator<E> trySplit() {
+            Node<E> p;
+            int s = getEst();
+            if(s>1 && (p = current) != null) {
+                int n = batch + BATCH_UNIT;
+                if(n>s) {
+                    n = s;
+                }
+                if(n>MAX_BATCH) {
+                    n = MAX_BATCH;
+                }
+                Object[] a = new Object[n];
+                int j = 0;
+                do {
+                    a[j++] = p.item;
+                } while((p = p.next) != null && j<n);
+                current = p;
+                batch = j;
+                est = s - j;
+                return Spliterators.spliterator(a, 0, j, Spliterator.ORDERED);
+            }
+            return null;
+        }
+        
+        public void forEachRemaining(Consumer<? super E> action) {
+            Node<E> p;
+            int n;
+            if(action == null)
+                throw new NullPointerException();
+            if((n = getEst())>0 && (p = current) != null) {
+                current = null;
+                est = 0;
+                do {
+                    E e = p.item;
+                    p = p.next;
+                    action.accept(e);
+                } while(p != null && --n>0);
+            }
+            if(list.modCount != expectedModCount) {
+                throw new ConcurrentModificationException();
+            }
+        }
+        
+        public boolean tryAdvance(Consumer<? super E> action) {
+            Node<E> p;
+            if(action == null) {
+                throw new NullPointerException();
+            }
+            if(getEst()>0 && (p = current) != null) {
+                --est;
+                E e = p.item;
+                current = p.next;
+                action.accept(e);
+                if(list.modCount != expectedModCount) {
+                    throw new ConcurrentModificationException();
+                }
+                return true;
+            }
+            return false;
+        }
+        
+        public int characteristics() {
+            return Spliterator.ORDERED | Spliterator.SIZED | Spliterator.SUBSIZED;
+        }
+        
+        final int getEst() {
+            int s; // force initialization
+            final LinkedList<E> lst;
+            if((s = est)<0) {
+                if((lst = list) == null) {
+                    s = est = 0;
+                } else {
+                    expectedModCount = lst.modCount;
+                    current = lst.first;
+                    s = est = lst.size;
+                }
+            }
+            return s;
+        }
+    }
+    
+}
