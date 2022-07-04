@@ -125,6 +125,7 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
      * integers), the {@code add} call will throw a
      * {@code ClassCastException}.
      */
+    //构造一个新的空树集，按照其元素的自然顺序排序
     public TreeSet() {
         this(new TreeMap<>());
     }
