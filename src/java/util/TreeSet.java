@@ -188,3 +188,64 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     }
     
     /*▲ 构造器 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    /*▼ 存值 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Adds the specified element to this set if it is not already present.
+     * More formally, adds the specified element {@code e} to this set if
+     * the set contains no element {@code e2} such that
+     * {@code Objects.equals(e, e2)}.
+     * If this set already contains the element, the call leaves the set
+     * unchanged and returns {@code false}.
+     *
+     * @param e element to be added to this set
+     *
+     * @return {@code true} if this set did not already contain the specified
+     * element
+     *
+     * @throws ClassCastException   if the specified object cannot be compared
+     *                              with the elements currently in this set
+     * @throws NullPointerException if the specified element is null
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
+     */
+    // 向Set中添加元素
+    public boolean add(E e) {
+        return m.put(e, PRESENT) == null;
+    }
+    
+    /**
+     * Adds all of the elements in the specified collection to this set.
+     *
+     * @param c collection containing elements to be added to this set
+     *
+     * @return {@code true} if this set changed as a result of the call
+     *
+     * @throws ClassCastException   if the elements provided cannot be compared
+     *                              with the elements currently in the set
+     * @throws NullPointerException if the specified collection is null or
+     *                              if any element is null and this set uses natural ordering, or
+     *                              its comparator does not permit null elements
+     */
+    // 将指定容器中的元素添加到当前Set中
+    public boolean addAll(Collection<? extends E> c) {
+        // Use linear-time version if applicable
+        if(m.size() == 0 && c.size()>0 && c instanceof SortedSet && m instanceof TreeMap) {
+            SortedSet<? extends E> set = (SortedSet<? extends E>) c;
+            
+            TreeMap<E, Object> map = (TreeMap<E, Object>) m;
+            
+            Comparator<?> cc = set.comparator();
+            Comparator<? super E> mc = map.comparator();
+            
+            if(cc == mc || (cc != null && cc.equals(mc))) {
+                map.addAllForTreeSet(set, PRESENT);
+                return true;
+            }
+        }
+        
+        return super.addAll(c);
+    }
+    
+    /*▲ 存值 ████████████████████████████████████████████████████████████████████████████████┛ */
