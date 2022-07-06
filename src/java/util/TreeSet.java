@@ -249,3 +249,71 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     }
     
     /*▲ 存值 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    /*▼ 取值 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * @throws NoSuchElementException {@inheritDoc}
+     */
+    // 返回遍历当前集合时的首个元素
+    public E first() {
+        return m.firstKey();
+    }
+    
+    /**
+     * @throws NoSuchElementException {@inheritDoc}
+     */
+    // 返回遍历当前集合时的最后一个元素
+    public E last() {
+        return m.lastKey();
+    }
+    
+    /**
+     * @throws ClassCastException   {@inheritDoc}
+     * @throws NullPointerException if the specified element is null
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
+     * @since 1.6
+     */
+    // 〖前驱〗获取遍历当前Set时形参e的前驱
+    public E lower(E e) {
+        return m.lowerKey(e);
+    }
+    
+    /**
+     * @throws ClassCastException   {@inheritDoc}
+     * @throws NullPointerException if the specified element is null
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
+     * @since 1.6
+     */
+    // 〖后继〗获取遍历当前Set时形参e的后继
+    public E higher(E e) {
+        return m.higherKey(e);
+    }
+    
+    /**
+     * @throws ClassCastException   {@inheritDoc}
+     * @throws NullPointerException if the specified element is null
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
+     * @since 1.6
+     */
+    // 【前驱】获取遍历当前Set时形参e的前驱（包括e本身）
+    public E floor(E e) {
+        return m.floorKey(e);
+    }
+    
+    /**
+     * @throws ClassCastException   {@inheritDoc}
+     * @throws NullPointerException if the specified element is null
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
+     * @since 1.6
+     */
+    // 【后继】获取遍历当前Set时形参e的后继（包括e本身）
+    public E ceiling(E e) {
+        return m.ceilingKey(e);
+    }
+    
+    /*▲ 取值 ████████████████████████████████████████████████████████████████████████████████┛ */
