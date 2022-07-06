@@ -317,3 +317,60 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     }
     
     /*▲ 取值 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    /*▼ 移除 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Removes the specified element from this set if it is present.
+     * More formally, removes an element {@code e} such that
+     * {@code Objects.equals(o, e)},
+     * if this set contains such an element.  Returns {@code true} if
+     * this set contained the element (or equivalently, if this set
+     * changed as a result of the call).  (This set will not contain the
+     * element once the call returns.)
+     *
+     * @param o object to be removed from this set, if present
+     *
+     * @return {@code true} if this set contained the specified element
+     *
+     * @throws ClassCastException   if the specified object cannot be compared
+     *                              with the elements currently in this set
+     * @throws NullPointerException if the specified element is null
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
+     */
+    // 移除指定的元素，返回值指示是否移除成功
+    public boolean remove(Object o) {
+        return m.remove(o) == PRESENT;
+    }
+    
+    
+    /**
+     * Removes all of the elements from this set.
+     * The set will be empty after this call returns.
+     */
+    // 清空当前Set中所有元素
+    public void clear() {
+        m.clear();
+    }
+    
+    
+    /**
+     * @since 1.6
+     */
+    // 移除遍历当前Set时的首个元素（及其关联的内容）
+    public E pollFirst() {
+        Map.Entry<E, ?> e = m.pollFirstEntry();
+        return (e == null) ? null : e.getKey();
+    }
+    
+    /**
+     * @since 1.6
+     */
+    // 移除遍历当前Set时的最后一个元素（及其关联的内容）
+    public E pollLast() {
+        Map.Entry<E, ?> e = m.pollLastEntry();
+        return (e == null) ? null : e.getKey();
+    }
+    
+    /*▲ 移除 ████████████████████████████████████████████████████████████████████████████████┛ */
