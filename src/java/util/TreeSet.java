@@ -374,3 +374,28 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     }
     
     /*▲ 移除 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    /*▼ 包含查询 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns {@code true} if this set contains the specified element.
+     * More formally, returns {@code true} if and only if this set
+     * contains an element {@code e} such that
+     * {@code Objects.equals(o, e)}.
+     *
+     * @param o object to be checked for containment in this set
+     *
+     * @return {@code true} if this set contains the specified element
+     *
+     * @throws ClassCastException   if the specified object cannot be compared
+     *                              with the elements currently in the set
+     * @throws NullPointerException if the specified element is null
+     *                              and this set uses natural ordering, or its comparator
+     *                              does not permit null elements
+     */
+    // 判断当前集合中是否包含元素o
+    public boolean contains(Object o) {
+        return m.containsKey(o);
+    }
+    
+    /*▲ 包含查询 ████████████████████████████████████████████████████████████████████████████████┛ */
