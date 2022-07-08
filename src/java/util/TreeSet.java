@@ -571,3 +571,82 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     }
     
     /*▲ 杂项 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    /*▼ 序列化 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    private static final long serialVersionUID = -2479143000061671589L;
+    
+    /**
+     * Save the state of the {@code TreeSet} instance to a stream (that is,
+     * serialize it).
+     *
+     * @serialData Emits the comparator used to order this set, or
+     * {@code null} if it obeys its elements' natural ordering
+     * (Object), followed by the size of the set (the number of
+     * elements it contains) (int), followed by all of its
+     * elements (each an Object) in order (as determined by the
+     * set's Comparator, or by the elements' natural ordering if
+     * the set has no Comparator).
+     */
+    private void writeObject(ObjectOutputStream s) throws IOException {
+        // Write out any hidden stuff
+        s.defaultWriteObject();
+        
+        // Write out Comparator
+        s.writeObject(m.comparator());
+        
+        // Write out size
+        s.writeInt(m.size());
+        
+        // Write out all elements in the proper order.
+        for(E e : m.keySet()) {
+            s.writeObject(e);
+        }
+    }
+    
+    /**
+     * Reconstitute the {@code TreeSet} instance from a stream (that is,
+     * deserialize it).
+     */
+    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+        // Read in any hidden stuff
+        s.defaultReadObject();
+        
+        // Read in Comparator
+        @SuppressWarnings("unchecked")
+        Comparator<? super E> c = (Comparator<? super E>) s.readObject();
+        
+        // Create backing TreeMap
+        TreeMap<E, Object> tm = new TreeMap<>(c);
+        m = tm;
+        
+        // Read in size
+        int size = s.readInt();
+        
+        tm.readTreeSet(size, s, PRESENT);
+    }
+    
+    /*▲ 序列化 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
+    
+    
+    /**
+     * Returns a shallow copy of this {@code TreeSet} instance. (The elements
+     * themselves are not cloned.)
+     *
+     * @return a shallow copy of this set
+     */
+    @SuppressWarnings("unchecked")
+    public Object clone() {
+        TreeSet<E> clone;
+        try {
+            clone = (TreeSet<E>) super.clone();
+        } catch(CloneNotSupportedException e) {
+            throw new InternalError(e);
+        }
+        
+        clone.m = new TreeMap<>(m);
+        return clone;
+    }
+    
+}
