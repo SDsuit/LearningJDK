@@ -491,3 +491,54 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     }
     
     /*▲ 视图 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    /*▼ 迭代 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns an iterator over the elements in this set in ascending order.
+     *
+     * @return an iterator over the elements in this set in ascending order
+     */
+    // 返回当前Set的Iterator
+    public Iterator<E> iterator() {
+        return m.navigableKeySet().iterator();
+    }
+    
+    /**
+     * Returns an iterator over the elements in this set in descending order.
+     *
+     * @return an iterator over the elements in this set in descending order
+     *
+     * @since 1.6
+     */
+    // 返回【逆序】Set的Iterator
+    public Iterator<E> descendingIterator() {
+        return m.descendingKeySet().iterator();
+    }
+    
+    /**
+     * Creates a <em><a href="Spliterator.html#binding">late-binding</a></em>
+     * and <em>fail-fast</em> {@link Spliterator} over the elements in this
+     * set.
+     *
+     * <p>The {@code Spliterator} reports {@link Spliterator#SIZED},
+     * {@link Spliterator#DISTINCT}, {@link Spliterator#SORTED}, and
+     * {@link Spliterator#ORDERED}.  Overriding implementations should document
+     * the reporting of additional characteristic values.
+     *
+     * <p>The spliterator's comparator (see
+     * {@link java.util.Spliterator#getComparator()}) is {@code null} if
+     * the tree set's comparator (see {@link #comparator()}) is {@code null}.
+     * Otherwise, the spliterator's comparator is the same as or imposes the
+     * same total ordering as the tree set's comparator.
+     *
+     * @return a {@code Spliterator} over the elements in this set
+     *
+     * @since 1.8
+     */
+    // 返回描述此集合中元素的Spliterator
+    public Spliterator<E> spliterator() {
+        return TreeMap.keySpliteratorFor(m);
+    }
+    
+    /*▲ 迭代 ████████████████████████████████████████████████████████████████████████████████┛ */
