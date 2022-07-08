@@ -542,3 +542,32 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     }
     
     /*▲ 迭代 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    /*▼ 杂项 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns the number of elements in this set (its cardinality).
+     *
+     * @return the number of elements in this set (its cardinality)
+     */
+    // 返回当前集合的元素数量
+    public int size() {
+        return m.size();
+    }
+    
+    /**
+     * Returns {@code true} if this set contains no elements.
+     *
+     * @return {@code true} if this set contains no elements
+     */
+    // 判断当前集合是否为空
+    public boolean isEmpty() {
+        return m.isEmpty();
+    }
+    
+    // 返回当前集合使用的外部比较器Comparator
+    public Comparator<? super E> comparator() {
+        return m.comparator();
+    }
+    
+    /*▲ 杂项 ████████████████████████████████████████████████████████████████████████████████┛ */
