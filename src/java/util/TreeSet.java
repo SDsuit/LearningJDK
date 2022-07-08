@@ -399,3 +399,95 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     }
     
     /*▲ 包含查询 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    /*▼ 视图 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * @throws ClassCastException       {@inheritDoc}
+     * @throws NullPointerException     if {@code fromElement} or
+     *                                  {@code toElement} is null and this set uses natural ordering,
+     *                                  or its comparator does not permit null elements
+     * @throws IllegalArgumentException {@inheritDoc}
+     */
+    // 获取【理论区间】为[fromElement, toElement)的Set
+    public SortedSet<E> subSet(E fromElement, E toElement) {
+        return subSet(fromElement, true, toElement, false);
+    }
+    
+    /**
+     * @throws ClassCastException       {@inheritDoc}
+     * @throws NullPointerException     if {@code toElement} is null
+     *                                  and this set uses natural ordering, or its comparator does
+     *                                  not permit null elements
+     * @throws IllegalArgumentException {@inheritDoc}
+     */
+    // 获取【理论区间】上限为toElement(不包含)的Set
+    public SortedSet<E> headSet(E toElement) {
+        return headSet(toElement, false);
+    }
+    
+    /**
+     * @throws ClassCastException       {@inheritDoc}
+     * @throws NullPointerException     if {@code fromElement} is null
+     *                                  and this set uses natural ordering, or its comparator does
+     *                                  not permit null elements
+     * @throws IllegalArgumentException {@inheritDoc}
+     */
+    // 获取【理论区间】下限为fromElement(包含)的Set
+    public SortedSet<E> tailSet(E fromElement) {
+        return tailSet(fromElement, true);
+    }
+    
+    
+    /**
+     * @throws ClassCastException       {@inheritDoc}
+     * @throws NullPointerException     if {@code fromElement} or {@code toElement}
+     *                                  is null and this set uses natural ordering, or its comparator
+     *                                  does not permit null elements
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @since 1.6
+     */
+    // 获取【理论区间】为〖fromElement, toElement〗的Set，区间下限/上限是否为闭区间由fromInclusive和toInclusive参数决定
+    public NavigableSet<E> subSet(E fromElement, boolean fromInclusive, E toElement, boolean toInclusive) {
+        NavigableMap<E, Object> subMap = m.subMap(fromElement, fromInclusive, toElement, toInclusive);
+        return new TreeSet<>(subMap);
+    }
+    
+    /**
+     * @throws ClassCastException       {@inheritDoc}
+     * @throws NullPointerException     if {@code toElement} is null and
+     *                                  this set uses natural ordering, or its comparator does
+     *                                  not permit null elements
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @since 1.6
+     */
+    // 获取【理论区间】上限为toElement的Set，区间上限是否为闭区间由inclusive参数决定
+    public NavigableSet<E> headSet(E toElement, boolean inclusive) {
+        NavigableMap<E, Object> headMap = m.headMap(toElement, inclusive);
+        return new TreeSet<>(headMap);
+    }
+    
+    /**
+     * @throws ClassCastException       {@inheritDoc}
+     * @throws NullPointerException     if {@code fromElement} is null and
+     *                                  this set uses natural ordering, or its comparator does
+     *                                  not permit null elements
+     * @throws IllegalArgumentException {@inheritDoc}
+     * @since 1.6
+     */
+    // 获取【理论区间】下限为fromElement的Set，区间下限是否为闭区间由inclusive参数决定
+    public NavigableSet<E> tailSet(E fromElement, boolean inclusive) {
+        NavigableMap<E, Object> tailMap = m.tailMap(fromElement, inclusive);
+        return new TreeSet<>(tailMap);
+    }
+    
+    
+    /**
+     * @since 1.6
+     */
+    // 获取【逆序】Set
+    public NavigableSet<E> descendingSet() {
+        return new TreeSet<>(m.descendingMap());
+    }
+    
+    /*▲ 视图 ████████████████████████████████████████████████████████████████████████████████┛ */
