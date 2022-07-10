@@ -172,3 +172,25 @@ public class HashSet<E> extends AbstractSet<E> implements Set<E>, Cloneable, Ser
     }
     
     /*▲ 构造器 ████████████████████████████████████████████████████████████████████████████████┛ */
+    
+    /*▼ 存值 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Adds the specified element to this set if it is not already present.
+     * More formally, adds the specified element {@code e} to this set if
+     * this set contains no element {@code e2} such that
+     * {@code Objects.equals(e, e2)}.
+     * If this set already contains the element, the call leaves the set
+     * unchanged and returns {@code false}.
+     *
+     * @param e element to be added to this set
+     *
+     * @return {@code true} if this set did not already contain the specified
+     * element
+     */
+    // 向Set中添加元素
+    public boolean add(E e) {
+        return map.put(e, PRESENT) == null;
+    }
+    
+    /*▲ 存值 ████████████████████████████████████████████████████████████████████████████████┛ */
