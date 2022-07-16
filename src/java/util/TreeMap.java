@@ -168,74 +168,75 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
     /*▼ 构造器 ████████████████████████████████████████████████████████████████████████████████┓ */
     
     /**
-     * Constructs a new, empty set; the backing {@code HashMap} instance has
-     * default initial capacity (16) and load factor (0.75).
+     * Constructs a new, empty tree map, using the natural ordering of its
+     * keys.  All keys inserted into the map must implement the {@link
+     * Comparable} interface.  Furthermore, all such keys must be
+     * <em>mutually comparable</em>: {@code k1.compareTo(k2)} must not throw
+     * a {@code ClassCastException} for any keys {@code k1} and
+     * {@code k2} in the map.  If the user attempts to put a key into the
+     * map that violates this constraint (for example, the user attempts to
+     * put a string key into a map whose keys are integers), the
+     * {@code put(Object key, Object value)} call will throw a
+     * {@code ClassCastException}.
      */
-    //创建一个新的空set
-    public HashSet() {
-        map = new HashMap<>();
+    public TreeMap() {
+        comparator = null;
     }
     
     /**
-     * Constructs a new, empty set; the backing {@code HashMap} instance has
-     * the specified initial capacity and default load factor (0.75).
+     * Constructs a new, empty tree map, ordered according to the given
+     * comparator.  All keys inserted into the map must be <em>mutually
+     * comparable</em> by the given comparator: {@code comparator.compare(k1,
+     * k2)} must not throw a {@code ClassCastException} for any keys
+     * {@code k1} and {@code k2} in the map.  If the user attempts to put
+     * a key into the map that violates this constraint, the {@code put(Object
+     * key, Object value)} call will throw a
+     * {@code ClassCastException}.
      *
-     * @param initialCapacity the initial capacity of the hash table
-     *
-     * @throws IllegalArgumentException if the initial capacity is less
-     *                                  than zero
+     * @param comparator the comparator that will be used to order this map.
+     *                   If {@code null}, the {@linkplain Comparable natural
+     *                   ordering} of the keys will be used.
      */
-    public HashSet(int initialCapacity) {
-        map = new HashMap<>(initialCapacity);
+    public TreeMap(Comparator<? super K> comparator) {
+        this.comparator = comparator;
     }
     
     /**
-     * Constructs a new, empty set; the backing {@code HashMap} instance has
-     * the specified initial capacity and the specified load factor.
+     * Constructs a new tree map containing the same mappings as the given
+     * map, ordered according to the <em>natural ordering</em> of its keys.
+     * All keys inserted into the new map must implement the {@link
+     * Comparable} interface.  Furthermore, all such keys must be
+     * <em>mutually comparable</em>: {@code k1.compareTo(k2)} must not throw
+     * a {@code ClassCastException} for any keys {@code k1} and
+     * {@code k2} in the map.  This method runs in n*log(n) time.
      *
-     * @param initialCapacity the initial capacity of the hash map
-     * @param loadFactor      the load factor of the hash map
+     * @param m the map whose mappings are to be placed in this map
      *
-     * @throws IllegalArgumentException if the initial capacity is less
-     *                                  than zero, or if the load factor is nonpositive
+     * @throws ClassCastException   if the keys in m are not {@link Comparable},
+     *                              or are not mutually comparable
+     * @throws NullPointerException if the specified map is null
      */
-    public HashSet(int initialCapacity, float loadFactor) {
-        map = new HashMap<>(initialCapacity, loadFactor);
+    public TreeMap(Map<? extends K, ? extends V> m) {
+        comparator = null;
+        putAll(m);
     }
     
     /**
-     * Constructs a new set containing the elements in the specified
-     * collection.  The {@code HashMap} is created with default load factor
-     * (0.75) and an initial capacity sufficient to contain the elements in
-     * the specified collection.
+     * Constructs a new tree map containing the same mappings and
+     * using the same ordering as the specified sorted map.  This
+     * method runs in linear time.
      *
-     * @param c the collection whose elements are to be placed into this set
+     * @param m the sorted map whose mappings are to be placed in this map,
+     *          and whose comparator is to be used to sort this map
      *
-     * @throws NullPointerException if the specified collection is null
+     * @throws NullPointerException if the specified map is null
      */
-    public HashSet(Collection<? extends E> c) {
-        map = new HashMap<>(Math.max((int) (c.size() / .75f) + 1, 16));
-        addAll(c);
-    }
-    
-    
-    /**
-     * Constructs a new, empty linked hash set.  (This package private
-     * constructor is only used by LinkedHashSet.) The backing
-     * HashMap instance is a LinkedHashMap with the specified initial
-     * capacity and the specified load factor.
-     *
-     * @param initialCapacity the initial capacity of the hash map
-     * @param loadFactor      the load factor of the hash map
-     * @param dummy           ignored (distinguishes this
-     *                        constructor from other int, float constructor.)
-     *
-     * @throws IllegalArgumentException if the initial capacity is less
-     *                                  than zero, or if the load factor is nonpositive
-     */
-    // 内部使用了LinkedHashMap
-    HashSet(int initialCapacity, float loadFactor, boolean dummy) {
-        map = new LinkedHashMap<>(initialCapacity, loadFactor);
+    public TreeMap(SortedMap<K, ? extends V> m) {
+        comparator = m.comparator();
+        try {
+            buildFromSorted(m.size(), m.entrySet().iterator(), null, null);
+        } catch(java.io.IOException | ClassNotFoundException cannotHappen) {
+        }
     }
     
     /*▲ 构造器 ████████████████████████████████████████████████████████████████████████████████┛ */
