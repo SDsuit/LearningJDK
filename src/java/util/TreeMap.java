@@ -240,3 +240,141 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
     }
     
     /*▲ 构造器 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    /*▼ 存值 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Associates the specified value with the specified key in this map.
+     * If the map previously contained a mapping for the key, the old
+     * value is replaced.
+     *
+     * @param key   key with which the specified value is to be associated
+     * @param value value to be associated with the specified key
+     *
+     * @return the previous value associated with {@code key}, or
+     * {@code null} if there was no mapping for {@code key}.
+     * (A {@code null} return can also indicate that the map
+     * previously associated {@code null} with {@code key}.)
+     *
+     * @throws ClassCastException   if the specified key cannot be compared
+     *                              with the keys currently in the map
+     * @throws NullPointerException if the specified key is null
+     *                              and this map uses natural ordering, or its comparator
+     *                              does not permit null keys
+     */
+    /*
+     * 向当前Map中存储一个key-value对，返回值代表该位置存储之前的值
+     *
+     * 如果外部比较器comparator有效，则允许key为null
+     * 否则，key不能为null，且需要实现内部比较器Comparable接口
+     */
+    public V put(K key, V value) {
+        Entry<K, V> t = root;
+        
+        // 如果根结点为null，说明是首个结点
+        if(t == null) {
+            // 这里使用compare起到了校验作用
+            compare(key, key); // type (and possibly null) check
+            
+            // 创建一个红黑树结点
+            root = new Entry<>(key, value, null);
+            size = 1;
+            modCount++;
+            return null;
+        }
+        
+        int cmp;
+        Entry<K, V> parent;
+        
+        // split comparator and comparable paths
+        Comparator<? super K> cpr = comparator;
+        
+        /* 查找同位元素，如果找到，直接覆盖 */
+        
+        // 如果存在外部比较器
+        if(cpr != null) {
+            do {
+                parent = t;
+                cmp = cpr.compare(key, t.key);
+                if(cmp<0) {
+                    t = t.left;
+                } else if(cmp>0) {
+                    t = t.right;
+                } else {
+                    return t.setValue(value);
+                }
+            } while(t != null);
+            
+            // 如果不存在外部比较器，则要求key实现内部比较器Comparable接口
+        } else {
+            if(key == null) {
+                throw new NullPointerException();
+            }
+            
+            @SuppressWarnings("unchecked")
+            Comparable<? super K> k = (Comparable<? super K>) key;
+            do {
+                parent = t;
+                cmp = k.compareTo(t.key);
+                if(cmp<0) {
+                    t = t.left;
+                } else if(cmp>0) {
+                    t = t.right;
+                } else {
+                    return t.setValue(value);
+                }
+            } while(t != null);
+        }
+        
+        /* 至此，说明没找到同位元素，需要新建一个元素插入到红黑树中 */
+        
+        Entry<K, V> e = new Entry<>(key, value, parent);
+        if(cmp<0) {
+            parent.left = e;
+        } else {
+            parent.right = e;
+        }
+        
+        // 将元素e插入到红黑树后，可能会破坏其平衡性，所以这里需要做出调整，保持红黑树的平衡
+        fixAfterInsertion(e);
+        
+        size++;
+        
+        modCount++;
+        
+        return null;
+    }
+    
+    /**
+     * Copies all of the mappings from the specified map to this map.
+     * These mappings replace any mappings that this map had for any
+     * of the keys currently in the specified map.
+     *
+     * @param map mappings to be stored in this map
+     *
+     * @throws ClassCastException   if the class of a key or value in
+     *                              the specified map prevents it from being stored in this map
+     * @throws NullPointerException if the specified map is null or
+     *                              the specified map contains a null key and this map does not
+     *                              permit null keys
+     */
+    // 将指定Map中的元素存入到当前Map（允许覆盖）
+    public void putAll(Map<? extends K, ? extends V> map) {
+        int mapSize = map.size();
+        
+        if(size == 0 && mapSize != 0 && map instanceof SortedMap) {
+            Comparator<?> c = ((SortedMap<?, ?>) map).comparator();
+            if(c == comparator || (c != null && c.equals(comparator))) {
+                ++modCount;
+                try {
+                    buildFromSorted(mapSize, map.entrySet().iterator(), null, null);
+                } catch(IOException | ClassNotFoundException cannotHappen) {
+                }
+                return;
+            }
+        }
+        
+        super.putAll(map);
+    }
+    
+    /*▲ 存值 ████████████████████████████████████████████████████████████████████████████████┛ */
