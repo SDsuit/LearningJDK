@@ -411,3 +411,51 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
     }
     
     /*▲ 取值 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    
+    /*▼ 移除 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Removes the mapping for this key from this TreeMap if present.
+     *
+     * @param key key for which mapping should be removed
+     *
+     * @return the previous value associated with {@code key}, or
+     * {@code null} if there was no mapping for {@code key}.
+     * (A {@code null} return can also indicate that the map
+     * previously associated {@code null} with {@code key}.)
+     *
+     * @throws ClassCastException   if the specified key cannot be compared
+     *                              with the keys currently in the map
+     * @throws NullPointerException if the specified key is null
+     *                              and this map uses natural ordering, or its comparator
+     *                              does not permit null keys
+     */
+    // 查找key对应的元素，并移除该元素
+    public V remove(Object key) {
+        Entry<K, V> p = getEntry(key);
+        if(p == null) {
+            return null;
+        }
+        
+        V oldValue = p.value;
+        
+        // 将元素从红黑树中移除
+        deleteEntry(p);
+        
+        return oldValue;
+    }
+    
+    
+    /**
+     * Removes all of the mappings from this map.
+     * The map will be empty after this call returns.
+     */
+    // 清空当前Map
+    public void clear() {
+        modCount++;
+        size = 0;
+        root = null;
+    }
+    
+    /*▲ 移除 ████████████████████████████████████████████████████████████████████████████████┛ */
