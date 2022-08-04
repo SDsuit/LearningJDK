@@ -378,3 +378,36 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
     }
     
     /*▲ 存值 ████████████████████████████████████████████████████████████████████████████████┛ */
+
+    /*▼ 取值 ████████████████████████████████████████████████████████████████████████████████┓ */
+    
+    /**
+     * Returns the value to which the specified key is mapped,
+     * or {@code null} if this map contains no mapping for the key.
+     *
+     * <p>More formally, if this map contains a mapping from a key
+     * {@code k} to a value {@code v} such that {@code key} compares
+     * equal to {@code k} according to the map's ordering, then this
+     * method returns {@code v}; otherwise it returns {@code null}.
+     * (There can be at most one such mapping.)
+     *
+     * <p>A return value of {@code null} does not <em>necessarily</em>
+     * indicate that the map contains no mapping for the key; it's also
+     * possible that the map explicitly maps the key to {@code null}.
+     * The {@link #containsKey containsKey} operation may be used to
+     * distinguish these two cases.
+     *
+     * @throws ClassCastException   if the specified key cannot be compared
+     *                              with the keys currently in the map
+     * @throws NullPointerException if the specified key is null
+     *                              and this map uses natural ordering, or its comparator
+     *                              does not permit null keys
+     */
+    // 查找key对应的元素的值，如果不存在该元素，则返回null值
+    public V get(Object key) {
+        // 查找key对应的元素
+        Entry<K, V> p = getEntry(key);
+        return (p == null ? null : p.value);
+    }
+    
+    /*▲ 取值 ████████████████████████████████████████████████████████████████████████████████┛ */
